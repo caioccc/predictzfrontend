@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import { useCallback, useEffect, useState } from "react";
 // import { useInView } from "react-intersection-observer";
 import { api } from "../api";
+import { notifications } from "@mantine/notifications";
 
 export default function Home() {
   const router = useRouter();
@@ -58,8 +59,18 @@ export default function Home() {
     setLoading(true);
     try {
       await api.post("/scrape/", { date: dateStr });
+      notifications.show({
+        title: "Sucesso",
+        message: "Processamento iniciado",
+        color: "green",
+      });
     } catch (err) {
       // Tratar erro
+      notifications.show({
+        title: "Erro ao recarregar jogos",
+        message: "Ocorreu um erro ao tentar recarregar os jogos.",
+        color: "red",
+      });
     }
     await fetchMatches(selectedDate);
     setLoading(false);
